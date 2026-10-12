@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 08 oct. 2026 à 19:01
+-- Généré le : lun. 12 oct. 2026 à 21:47
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `tracks`
 --
+CREATE DATABASE IF NOT EXISTS `tracks` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `tracks`;
 
 -- --------------------------------------------------------
 
@@ -231,6 +233,13 @@ CREATE TABLE `utilisateur2` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Déchargement des données de la table `utilisateur2`
+--
+
+INSERT INTO `utilisateur2` (`ID2`, `Filiere2ID2`, `Id`, `Nom`, `Prenom`, `Email`, `MotDePasse`, `Role`, `EstActif`, `Matricule`, `Specialite`, `Discriminator`) VALUES
+(1, NULL, 1, 'ADMIN', 'Scolarite', 'admin.tracks@etablissement.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'scolarite', b'1', 'ADM202601', NULL, 'Utilisateur');
+
+--
 -- Index pour les tables déchargées
 --
 
@@ -420,7 +429,7 @@ ALTER TABLE `ue2`
 -- AUTO_INCREMENT pour la table `utilisateur2`
 --
 ALTER TABLE `utilisateur2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Contraintes pour les tables déchargées

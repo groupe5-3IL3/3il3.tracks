@@ -1,4 +1,13 @@
 <?php
+if(session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Si le ticket secret n'existe pas encore pour cette visite, on le crée
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 $loginError = $_SESSION['login_error'] ?? null;
 unset($_SESSION['login_error']);
 ?>
@@ -11,15 +20,13 @@ unset($_SESSION['login_error']);
     <meta name="theme-color" content="#10183b" />
     <meta name="description" content="Connectez-vous à TrackS, votre espace de suivi pédagogique." />
     <link rel="icon" href="assets/images/favicon.ico" />
-    <link rel="stylesheet" href="assets/css/connexion.css" />
-    <!-- donner le lien stylesheet vers le bootstrap css en ligne -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="/TrackS_back/bootstrap/css/bootstrap.min.css"> 
+    <link rel="stylesheet" href="assets/css/connexion.css" /> 
     <title>Connexion | TrackS</title>
 </head>
 
 <body>
-    <main class="container p-0">
+    <main class="container-fluid p-0">
         <div class="row g-0 login-shell">
             <section class="col-lg-6 welcome-panel d-flex flex-column justify-content-between"
                 aria-labelledby="welcome-title">
@@ -85,7 +92,9 @@ unset($_SESSION['login_error']);
                     </p>
                     <?php endif; ?>
 
-                    <form action="connectController.php" method="post" autocomplete="on">
+                    <form action="Controller/connectController.php" method="post" autocomplete="on">
+                        <!-- Cette ligne insère le ticket secret invisible pour l'utilisateur -->
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <div class="field-group">
                             <label for="profil" class="form-label">Votre profil</label>
                             <select name="profil" id="profil" class="form-select" required>
@@ -132,6 +141,7 @@ unset($_SESSION['login_error']);
             </section>
         </div>
     </main>
+    <script src="/TrackS_back/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

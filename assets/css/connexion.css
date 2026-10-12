@@ -7,19 +7,6 @@
   --line: #e6e9f2;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  min-width: 320px;
-  min-height: 100vh;
-  color: var(--ink);
-  background: #f8f9fc;
-  font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-
 .login-shell {
   min-height: 100vh;
 }
@@ -31,8 +18,7 @@ body {
   overflow: hidden;
   padding: clamp(2rem, 5vw, 5rem);
   color: #fff;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       ellipse at 12% 100%,
       rgba(74, 110, 255, 0.48),
       transparent 38%
@@ -56,8 +42,7 @@ body {
   aspect-ratio: 1;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 50%;
-  box-shadow:
-    0 0 0 48px rgba(255, 255, 255, 0.025),
+  box-shadow: 0 0 0 48px rgba(255, 255, 255, 0.025),
     0 0 0 100px rgba(255, 255, 255, 0.02);
   animation: orbit 32s linear infinite;
 }
@@ -89,8 +74,7 @@ body {
     rgba(255, 255, 255, 0.1),
     rgba(94, 121, 255, 0.04)
   );
-  box-shadow:
-    inset -18px -18px 50px rgba(5, 13, 43, 0.16),
+  box-shadow: inset -18px -18px 50px rgba(5, 13, 43, 0.16),
     0 24px 80px rgba(4, 9, 31, 0.14);
   animation: float 8s ease-in-out infinite;
 }
@@ -242,8 +226,7 @@ body {
   flex-direction: column;
   justify-content: center;
   padding: clamp(2rem, 6vw, 6.5rem);
-  background:
-    radial-gradient(
+  background: radial-gradient(
       ellipse at 100% 0%,
       rgba(82, 104, 245, 0.055),
       transparent 36%
@@ -285,43 +268,6 @@ body {
   line-height: 1.7;
 }
 
-.form-label {
-  margin-bottom: 0.55rem;
-  color: #313a56;
-  font-size: 0.86rem;
-  font-weight: 650;
-}
-
-.form-select,
-.form-control {
-  min-height: 54px;
-  padding: 0.8rem 1rem;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  color: var(--ink);
-  background-color: #fff;
-  font-size: 0.94rem;
-  box-shadow: 0 2px 5px rgba(28, 39, 76, 0.025);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
-}
-
-.form-select {
-  padding-right: 2.8rem;
-}
-
-.form-control::placeholder {
-  color: #a8aec0;
-}
-
-.form-select:focus,
-.form-control:focus {
-  border-color: #8796ff;
-  box-shadow: 0 0 0 4px rgba(82, 104, 245, 0.12);
-}
-
 .field-group {
   margin-bottom: 1.35rem;
 }
@@ -347,10 +293,7 @@ body {
   font-size: 0.94rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .submit-button:hover {
@@ -396,17 +339,11 @@ body {
   text-align: center;
 }
 
-:focus-visible {
-  outline: 3px solid #f3ad43;
-  outline-offset: 3px;
-}
-
 @keyframes enter-up {
   from {
     opacity: 0;
     transform: translateY(18px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -418,7 +355,6 @@ body {
   100% {
     transform: translate3d(0, 0, 0);
   }
-
   50% {
     transform: translate3d(0, -18px, 0);
   }
@@ -435,16 +371,13 @@ body {
     min-height: 540px;
     padding: 2.25rem;
   }
-
   .welcome-content {
     padding-block: 4rem;
   }
-
   .welcome-title {
     max-width: 620px;
     font-size: clamp(2.7rem, 8vw, 4.5rem);
   }
-
   .login-panel {
     min-height: auto;
     padding: 4rem 2rem;
@@ -456,47 +389,37 @@ body {
     min-height: 390px;
     padding: 1.5rem;
   }
-
   .brand-mark {
     width: 40px;
     height: 40px;
     border-radius: 13px;
   }
-
   .welcome-content {
     padding-block: 3.4rem;
   }
-
   .welcome-title {
     font-size: clamp(2.45rem, 12vw, 3.5rem);
   }
-
   .welcome-copy {
     font-size: 0.94rem;
   }
-
   .feature-list {
     gap: 0.5rem;
     margin-top: 1.5rem;
   }
-
   .feature-list li {
     padding: 0.55rem 0.7rem;
     font-size: 0.76rem;
   }
-
   .panel-footer {
     font-size: 0.7rem;
   }
-
   .login-panel {
     padding: 3rem 1.5rem 2rem;
   }
-
   .login-description {
     margin-bottom: 1.8rem;
   }
-
   .login-footer {
     margin-top: 2rem;
   }

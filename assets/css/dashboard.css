@@ -1,0 +1,103 @@
+/* Header */
+/* Effet sur les liens de navigation principaux */
+.hover-nav-link {
+    color: #5a626a;
+    transition: all 0.2s ease-in-out;
+}
+
+.hover-nav-link:hover {
+    background-color: #f8f9fa;
+    color: #0d6efd !important;
+}
+
+/* Harmonisation graphique des menus déroulants (Dropdowns) */
+.dropdown-menu {
+    border-radius: 12px;
+    min-width: 240px;
+}
+
+.dropdown-item {
+    color: #495057;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #edf2f9;
+    color: #0d6efd;
+}
+
+/* Main */
+
+/* Style personnalisé pour le défilement automatique continu (Carousel sans boutons) */
+.slider-container {
+    overflow: hidden;
+    padding: 15px 0;
+    position: relative;
+    width: 100%;
+}
+
+.slider-track {
+    display: flex;
+    gap: 1.5rem;
+    width: calc(350px * 8);
+    /* Ajusté pour la duplication des cartes */
+    animation: scroll-infinite 25s linear infinite;
+}
+
+.slider-track:hover {
+    animation-play-state: paused;
+    /* Le défilement s'arrête quand la souris survole */
+}
+
+.course-card-custom {
+    width: 350px;
+    flex-shrink: 0;
+}
+
+@keyframes scroll-infinite {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(calc(-350px * 4 - 6rem));
+    }
+
+    /* Coupe pile après le premier groupe */
+}
+
+.zoom-hover {
+    transition: transform 0.3s ease;
+}
+
+.zoom-hover:hover {
+    transform: scale(1.03);
+}
+
+/* Footer */
+/* Styles spécifiques pour polir l'affichage conforme du footer */
+.hover-link {
+    transition: color 0.15s ease-in-out;
+}
+
+.hover-link:hover {
+    color: #0d6efd !important;
+}
+
+.hover-icon {
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        color 0.2s ease;
+}
+
+.hover-icon:hover {
+    color: #0d6efd;
+    transform: translateY(-2px);
+}
+
+.tracking-wider {
+    letter-spacing: 0.05em;
+}

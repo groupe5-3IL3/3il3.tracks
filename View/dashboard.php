@@ -25,14 +25,13 @@ $user_email = $_SESSION['user_email'];
     <meta name="theme-color" content="#10183b" />
     <meta name="description" content="Connectez-vous à TrackS, votre espace de suivi pédagogique." />
     <link rel="icon" href="../assets/images/favicon.ico" />    
-    <link rel="stylesheet" href="/../TrackS_back/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/dashboard.css">
     <title>Tableau de Bord | TrackS</title>
 </head>
 <body class="container d-flex flex-column min-vh-100 bg-light">
     
-    <!-- Intégration du Header modulaire -->
     <?php include 'header.php'; ?>
 
     <main class="flex-grow-1">
@@ -198,6 +197,6 @@ $user_email = $_SESSION['user_email'];
 
     <?php include 'footer.php'; ?>
 
-    <script src="/../TrackS_back/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

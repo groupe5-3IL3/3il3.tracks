@@ -10,33 +10,33 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_SESSION['user_id'];
 
-    // Traitement des commutateurs : 1 si coché, 0 si absent du tableau $_POST
-    $notify_absence = isset($_POST['notify_absence']) ? 1 : 0;
+    // Récupération sécurisée des commutateurs (1 ou 0)
+    $notify_absence  = isset($_POST['notify_absence']) ? 1 : 0;
     $notify_syllabus = isset($_POST['notify_syllabus']) ? 1 : 0;
-    $notify_justif = isset($_POST['notify_justif']) ? 1 : 0;
+    $notify_justif   = isset($_POST['notify_justif']) ? 1 : 0;
 
     try {
-
-        //On récupère l'instance PDO en appelant votre fonction
         $pdo = tracksDatabase();
 
-        // Enregistrement ou mise à jour forcée sur la contrainte de clé UtilisateurID
+        // 1. Insertion ou mise à jour (nécessite un index UNIQUE sur UtilisateurID)
         $sql = "INSERT INTO parametre (UtilisateurID, NotifyAbsence_set, NotifySyllabus_set, NotifyJustif_set) 
-                VALUES (:user_id, :absence, :syllabus, :justif)
-                ON DUPLICATE KEY UPDATE NotifyAbsence_set = :absence2, NotifySyllabus_set = :syllabus2, NotifyJustif_set = :justif2";
+                VALUES (:user_id, CAST(:absence AS UNSIGNED), CAST(:syllabus AS UNSIGNED), CAST(:justif AS UNSIGNED))
+                ON DUPLICATE KEY UPDATE
+                    NotifyAbsence_set  = CAST(:absence2 AS UNSIGNED),
+                    NotifySyllabus_set = CAST(:syllabus2 AS UNSIGNED),
+                    NotifyJustif_set   = CAST(:justif2 AS UNSIGNED)";
         
         $query = $pdo->prepare($sql);
         $query->execute([
-            'user_id' => $user_id,
-            'absence' => $notify_absence,
-            'syllabus'=> $notify_syllabus,
-            'justif'  => $notify_justif,
-            'absence2' => $notify_absence,
-            'syllabus2'=> $notify_syllabus,
-            'justif2'  => $notify_justif
+            'user_id'   => $user_id,
+            'absence'   => $notify_absence,
+            'syllabus'  => $notify_syllabus,
+            'justif'    => $notify_justif,
+            'absence2'  => $notify_absence,
+            'syllabus2' => $notify_syllabus,
+            'justif2'   => $notify_justif
         ]);
 
-        // Persistance en session pour maintenir le rendu visuel de l'UI synchrone
         $_SESSION['notify_absence'] = $notify_absence;
         $_SESSION['notify_syllabus'] = $notify_syllabus;
         $_SESSION['notify_justif'] = $notify_justif;
@@ -49,4 +49,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: ../View/parametres.php');
     exit();
 }
-    

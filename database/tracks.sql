@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 15 oct. 2026 à 14:05
+-- Généré le : ven. 16 oct. 2026 à 06:47
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -125,6 +125,26 @@ CREATE TABLE `logsaudit` (
   `Description_log` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déclencheurs `justification`
+--
+CREATE TRIGGER `after_justification_insert` AFTER INSERT ON `justification` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (1, 6, CURDATE(), 'INSERT', CONCAT('Nouveau justificatif d''absence téléversé pour le pointage de présence ID : ', NEW.PresenceID));
+
+CREATE TRIGGER `after_justification_update` AFTER UPDATE ON `justification` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (1, 7, CURDATE(), 'UPDATE', CONCAT('Statut du justificatif ID ', NEW.ID, ' mis à jour (Validé = ', NEW.EstValide_jus, ')'));
+
+--
+-- Déchargement des données de la table `logsaudit`
+--
+
+INSERT INTO `logsaudit` (`ID`, `UtilisateurID`, `Id_log`, `Timestamp_log`, `Action_log`, `Description_log`) VALUES
+(1, 1, 2, '2026-10-15', 'UPDATE', 'Modification de l''utilisateur ID 1 (Changement d''email ou mise à jour de sécurité de mot de passe)'),
+(2, 2, 1, '2026-10-15', 'INSERT', 'Inscription de l''utilisateur : TCHOUTA Alain Serge (Rôle : chef_departement)'),
+(3, 2, 2, '2026-10-15', 'UPDATE', 'Modification de l''utilisateur ID 2 (Changement d''email ou mise à jour de sécurité de mot de passe)');
+
 -- --------------------------------------------------------
 
 --
@@ -142,6 +162,14 @@ CREATE TABLE `parametre` (
   `NotifyJustif_set` bit(1) NOT NULL DEFAULT b'1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `parametre`
+--
+
+INSERT INTO `parametre` (`ID`, `UtilisateurID`, `AnneeAcademique_set`, `RenduAppel_set`, `FormatExport_set`, `NotifyAbsence_set`, `NotifySyllabus_set`, `NotifyJustif_set`) VALUES
+(1, 1, '2026-2027', 'trombi', 'pdf', b'1', b'0', b'1'),
+(22, 2, '2026-2027', 'liste', 'pdf', b'1', b'0', b'1');
+
 -- --------------------------------------------------------
 
 --
@@ -155,6 +183,17 @@ CREATE TABLE `presence` (
   `Id_pre` int(10) NOT NULL,
   `Statut_pre` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déclencheurs `presence`
+--
+CREATE TRIGGER `after_presence_insert` AFTER INSERT ON `presence` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (NEW.UtilisateurID, 4, CURDATE(), 'INSERT', CONCAT('Marquage initial de présence sur la séance ID ', NEW.SeanceID, ' - Statut : ', NEW.Statut_pre));
+
+CREATE TRIGGER `after_presence_update` AFTER UPDATE ON `presence` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (NEW.UtilisateurID, 5, CURDATE(), 'UPDATE', CONCAT('Modification de présence pour l''étudiant ID ', NEW.UtilisateurID, ' (Ancien statut: ', OLD.Statut_pre, ' -> Nouveau statut: ', NEW.Statut_pre, ')'));
 
 -- --------------------------------------------------------
 
@@ -254,7 +293,23 @@ CREATE TABLE `utilisateur` (
 --
 
 INSERT INTO `utilisateur` (`ID`, `FiliereID`, `Id_user`, `Nom_user`, `Prenom_user`, `Email_user`, `MotDePasse_user`, `Role_user`, `EstActif_user`, `Matricule_etu`, `Specialite_ens`, `Discriminator`) VALUES
-(1, NULL, 1, 'ADMIN', 'Scolarite', 'admin.tracks@etablissement.fr', '$2y$10$.gEARKy8iiifbexZ5.jfTeIal8Ztk4o9AF.5WlhRBjjRJeD6AZ14G', 'scolarite', b'1', 'ADM202601', NULL, 'Utilisateur');
+(1, NULL, 1, 'ADMIN', 'Scolarite', 'admin.tracks@etablissement.fr', '$2y$10$K6TaRN1OZAFyqj2.WaecUO7.8l9jr6KwnDXRukeygKsXTkJyzEeqW', 'scolarite', b'1', 'ADM202601', NULL, 'Utilisateur'),
+(2, NULL, 2, 'TCHOUTA', 'Alain Serge', 'jean.eboa@etablissement.fr', '$2y$10$K6TaRN1OZAFyqj2.WaecUO7.8l9jr6KwnDXRukeygKsXTkJyzEeqW', 'chef_departement', b'1', NULL, 'Modelisation/Programmation systeme', 'Utilisateur');
+
+--
+-- Déclencheurs `utilisateur`
+--
+CREATE TRIGGER `after_utilisateur_insert` AFTER INSERT ON `utilisateur` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (NEW.ID, 1, CURDATE(), 'INSERT', CONCAT('Inscription de l''utilisateur : ', NEW.Nom_user, ' ', NEW.Prenom_user, ' (Rôle : ', NEW.Role_user, ')'));
+
+CREATE TRIGGER `after_utilisateur_update` AFTER UPDATE ON `utilisateur` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (NEW.ID, 2, CURDATE(), 'UPDATE', CONCAT('Modification de l''utilisateur ID ', NEW.ID, ' (Changement d''email ou mise à jour de sécurité de mot de passe)'));
+
+CREATE TRIGGER `before_utilisateur_delete` BEFORE DELETE ON `utilisateur` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (OLD.ID, 3, CURDATE(), 'DELETE', CONCAT('Suppression de l''utilisateur : ', OLD.Nom_user, ' ', OLD.Prenom_user, ' (Ancien Rôle : ', OLD.Role_user, ')'));
 
 --
 -- Index pour les tables déchargées
@@ -314,8 +369,7 @@ ALTER TABLE `logsaudit`
 --
 ALTER TABLE `parametre`
   ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `unique_user` (`UtilisateurID`),
-  ADD UNIQUE KEY `UtilisateurID` (`UtilisateurID`);
+  ADD UNIQUE KEY `unique_user` (`UtilisateurID`);
 
 --
 -- Index pour la table `presence`
@@ -366,7 +420,8 @@ ALTER TABLE `ue`
 --
 ALTER TABLE `utilisateur`
   ADD PRIMARY KEY (`ID`),
-  ADD KEY `inscrit2` (`FiliereID`);
+  ADD KEY `inscrit2` (`FiliereID`),
+  ADD KEY `idx_search_identity` (`Nom_user`,`Prenom_user`,`Matricule_etu`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -412,13 +467,13 @@ ALTER TABLE `justification`
 -- AUTO_INCREMENT pour la table `logsaudit`
 --
 ALTER TABLE `logsaudit`
-  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `parametre`
 --
 ALTER TABLE `parametre`
-  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT pour la table `presence`
@@ -460,7 +515,7 @@ ALTER TABLE `ue`
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Contraintes pour les tables déchargées

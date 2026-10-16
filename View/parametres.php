@@ -15,6 +15,43 @@ $user_role = $_SESSION['user_role'];
 $user_nom = $_SESSION['user_nom'];
 $user_prenom = $_SESSION['user_prenom'];
 $user_email = $_SESSION['user_email'];
+
+require_once '../config/db.php';
+
+$notificationDefaults = [
+    'notify_absence' => 1,
+    'notify_syllabus' => 0,
+    'notify_justif' => 1,
+];
+foreach ($notificationDefaults as $key => $value) {
+    $_SESSION[$key] = $value;
+}
+
+try {
+    $pdo = tracksDatabase();
+    $stmt = $pdo->prepare(
+        'SELECT NotifyAbsence_set, NotifySyllabus_set, NotifyJustif_set
+         FROM parametre
+         WHERE UtilisateurID = :user_id
+         LIMIT 1'
+    );
+    $stmt->execute(['user_id' => $user_id]);
+    $notificationSettings = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($notificationSettings) {
+        $notificationFields = [
+            'notify_absence' => 'NotifyAbsence_set',
+            'notify_syllabus' => 'NotifySyllabus_set',
+            'notify_justif' => 'NotifyJustif_set',
+        ];
+        foreach ($notificationFields as $sessionKey => $field) {
+            $value = $notificationSettings[$field];
+            $_SESSION[$sessionKey] = $value === "\x01" || $value === 1 || $value === '1' ? 1 : 0;
+        }
+    }
+} catch (PDOException $e) {
+    $_SESSION['settings_error'] = 'Impossible de charger vos préférences de notification.';
+}
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +65,7 @@ $user_email = $_SESSION['user_email'];
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/dashboard.css">
-    <title>Tableau de Bord | TrackS</title>
+    <title>Parametre | TrackS</title>
 </head>
 <body class="container d-flex flex-column min-vh-100 bg-light">
     
@@ -185,7 +222,7 @@ $user_email = $_SESSION['user_email'];
                                     </div>
                                     <div class="form-check form-switch fs-5">
                                         <input class="form-check-input" type="checkbox" name="notify_absence" value="1" role="switch" id="notifyAbsence" 
-                                            <?php echo (isset($_SESSION['notify_absence']) && $_SESSION['notify_absence'] == 1) ? 'checked' : ''; ?>>
+                                            <?php echo (($_SESSION['notify_absence'] ?? 0) === 1) ? 'checked' : ''; ?>>
                                     </div>
                                 </div>
 
@@ -196,7 +233,7 @@ $user_email = $_SESSION['user_email'];
                                     </div>
                                     <div class="form-check form-switch fs-5">
                                         <input class="form-check-input" type="checkbox" name="notify_syllabus" value="1" role="switch" id="notifySyllabus"
-                                            <?php echo (isset($_SESSION['notify_syllabus']) && $_SESSION['notify_syllabus'] == 1) ? 'checked' : ''; ?>>
+                                            <?php echo (($_SESSION['notify_syllabus'] ?? 0) === 1) ? 'checked' : ''; ?>>
                                     </div>
                                 </div>
 
@@ -207,7 +244,7 @@ $user_email = $_SESSION['user_email'];
                                     </div>
                                     <div class="form-check form-switch fs-5">
                                         <input class="form-check-input" type="checkbox" name="notify_justif" value="1" role="switch" id="notifyJustif" 
-                                            <?php echo (isset($_SESSION['notify_justif']) && $_SESSION['notify_justif'] == 1) ? 'checked' : ''; ?>>
+                                            <?php echo (($_SESSION['notify_justif'] ?? 0) === 1) ? 'checked' : ''; ?>>
                                     </div>
                                 </div>
                                 

@@ -26,25 +26,25 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         //On récupère l'instance PDO en appelant votre fonction
         $pdo = tracksDatabase();
 
-        $stmt = $pdo->prepare('SELECT * FROM utilisateur2 WHERE (Email = :email OR Matricule = :matricule) AND Role = :role AND EstActif = 1 LIMIT 1');
+        $stmt = $pdo->prepare('SELECT * FROM utilisateur WHERE (Email_user = :email OR Matricule_etu = :matricule) AND Role_user = :role AND EstActif_user = 1 LIMIT 1');
         $stmt->execute([
-            'email'     => $identifiant, 
-            'matricule' => $identifiant, 
+            'email'     => $identifiant,
+            'matricule' => $identifiant,
             'role'      => $profil
         ]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // Vérification du mot de passe haché
-        if($user && password_verify($mot_de_passe, $user['MotDePasse'])) {
+        if($user && password_verify($mot_de_passe, $user['MotDePasse_user'])) {
             //Sécurisation de la session pour éviter le détournement de session
             session_regenerate_id(true);
 
-            $_SESSION['user_id'] = $user['ID2']; 
-            $_SESSION['user_role'] = $user['Role'];
-            $_SESSION['user_nom'] = $user['Nom'];
-            $_SESSION['user_prenom'] = $user['Prenom'];
-            $_SESSION['user_email'] = $user['Email'];
-           
+            $_SESSION['user_id'] = $user['Id_user'];
+            $_SESSION['user_role'] = $user['Role_user'];
+            $_SESSION['user_nom'] = $user['Nom_user'];
+            $_SESSION['user_prenom'] = $user['Prenom_user'];
+            $_SESSION['user_email'] = $user['Email_user'];
+
             // Redirection vers le tableau de bord après la connexion réussie
             header('Location: ../View/dashboard.php');
             exit();

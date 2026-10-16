@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : lun. 12 oct. 2026 à 21:47
+-- Généré le : ven. 16 oct. 2026 à 06:47
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -26,39 +26,39 @@ USE `tracks`;
 -- --------------------------------------------------------
 
 --
--- Structure de la table `anneeacademique2`
+-- Structure de la table `anneeacademique`
 --
 
-CREATE TABLE `anneeacademique2` (
-  `ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
-  `Libelle` varchar(255) DEFAULT NULL,
-  `EstActive` bit(1) NOT NULL
+CREATE TABLE `anneeacademique` (
+  `ID` int(10) NOT NULL,
+  `Id_acad` int(10) NOT NULL,
+  `Libelle_acad` varchar(255) DEFAULT NULL,
+  `EstActive_acad` bit(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `campus2`
+-- Structure de la table `campus`
 --
 
-CREATE TABLE `campus2` (
-  `ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
-  `Nom` varchar(255) DEFAULT NULL,
-  `Localisation` varchar(255) DEFAULT NULL
+CREATE TABLE `campus` (
+  `ID` int(10) NOT NULL,
+  `Id_campus` int(10) NOT NULL,
+  `Nom_campus` varchar(255) DEFAULT NULL,
+  `Localisation_campus` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `chapitre2`
+-- Structure de la table `chapitre`
 --
 
-CREATE TABLE `chapitre2` (
-  `ID2` int(10) NOT NULL,
-  `UE2ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
+CREATE TABLE `chapitre` (
+  `ID` int(10) NOT NULL,
+  `UEID` int(10) NOT NULL,
+  `Id_chap` int(10) NOT NULL,
   `Titre` varchar(255) DEFAULT NULL,
   `Ordre` int(10) NOT NULL,
   `EstTraite` bit(1) NOT NULL
@@ -67,444 +67,536 @@ CREATE TABLE `chapitre2` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `convocation2`
+-- Structure de la table `convocation`
 --
 
-CREATE TABLE `convocation2` (
-  `ID2` int(10) NOT NULL,
-  `Utilisateur2ID22` int(10) NOT NULL,
-  `Utilisateur2ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
-  `Motif` varchar(255) DEFAULT NULL,
-  `DateEmission` date DEFAULT NULL,
-  `DateRendezVous` date DEFAULT NULL
+CREATE TABLE `convocation` (
+  `ID` int(10) NOT NULL,
+  `UtilisateurID2` int(10) NOT NULL,
+  `UtilisateurID` int(10) NOT NULL,
+  `Id_con` int(10) NOT NULL,
+  `Motif_con` varchar(255) DEFAULT NULL,
+  `DateEmission_con` date DEFAULT NULL,
+  `DateRendezVous_con` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `filiere2`
+-- Structure de la table `filiere`
 --
 
-CREATE TABLE `filiere2` (
-  `ID2` int(10) NOT NULL,
-  `Semestre2ID2` int(10) NOT NULL,
-  `Campus2ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
-  `Nom` varchar(255) DEFAULT NULL,
-  `SeuilAbsences` int(10) NOT NULL
+CREATE TABLE `filiere` (
+  `ID` int(10) NOT NULL,
+  `SemestreID` int(10) NOT NULL,
+  `CampusID` int(10) NOT NULL,
+  `Id_filiere` int(10) NOT NULL,
+  `Nom_filiere` varchar(255) DEFAULT NULL,
+  `SeuilAbsences_filiere` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `justification2`
+-- Structure de la table `justification`
 --
 
-CREATE TABLE `justification2` (
-  `ID2` int(10) NOT NULL,
-  `Presence2ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
-  `Motif` varchar(255) DEFAULT NULL,
-  `PieceJointePath` varchar(255) DEFAULT NULL,
-  `EstValide` bit(1) NOT NULL
+CREATE TABLE `justification` (
+  `ID` int(10) NOT NULL,
+  `PresenceID` int(10) NOT NULL,
+  `Id_jus` int(10) NOT NULL,
+  `Motif_jus` varchar(255) DEFAULT NULL,
+  `PieceJointePath_jus` varchar(255) DEFAULT NULL,
+  `EstValide_jus` bit(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `logsaudit2`
+-- Structure de la table `logsaudit`
 --
 
-CREATE TABLE `logsaudit2` (
-  `ID2` int(10) NOT NULL,
-  `Utilisateur2ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
-  `Timestamp` date DEFAULT NULL,
-  `Action` varchar(255) DEFAULT NULL,
-  `Description` varchar(255) DEFAULT NULL
+CREATE TABLE `logsaudit` (
+  `ID` int(10) NOT NULL,
+  `UtilisateurID` int(10) NOT NULL,
+  `Id_log` int(10) NOT NULL,
+  `Timestamp_log` date DEFAULT NULL,
+  `Action_log` varchar(255) DEFAULT NULL,
+  `Description_log` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déclencheurs `justification`
+--
+CREATE TRIGGER `after_justification_insert` AFTER INSERT ON `justification` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (1, 6, CURDATE(), 'INSERT', CONCAT('Nouveau justificatif d''absence téléversé pour le pointage de présence ID : ', NEW.PresenceID));
+
+CREATE TRIGGER `after_justification_update` AFTER UPDATE ON `justification` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (1, 7, CURDATE(), 'UPDATE', CONCAT('Statut du justificatif ID ', NEW.ID, ' mis à jour (Validé = ', NEW.EstValide_jus, ')'));
+
+--
+-- Déchargement des données de la table `logsaudit`
+--
+
+INSERT INTO `logsaudit` (`ID`, `UtilisateurID`, `Id_log`, `Timestamp_log`, `Action_log`, `Description_log`) VALUES
+(1, 1, 2, '2026-10-15', 'UPDATE', 'Modification de l''utilisateur ID 1 (Changement d''email ou mise à jour de sécurité de mot de passe)'),
+(2, 2, 1, '2026-10-15', 'INSERT', 'Inscription de l''utilisateur : TCHOUTA Alain Serge (Rôle : chef_departement)'),
+(3, 2, 2, '2026-10-15', 'UPDATE', 'Modification de l''utilisateur ID 2 (Changement d''email ou mise à jour de sécurité de mot de passe)');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `parametre`
+--
+
+CREATE TABLE `parametre` (
+  `ID` int(10) NOT NULL,
+  `UtilisateurID` int(10) NOT NULL,
+  `AnneeAcademique_set` varchar(255) DEFAULT '2026-2027',
+  `RenduAppel_set` varchar(255) DEFAULT 'liste',
+  `FormatExport_set` varchar(255) DEFAULT 'pdf',
+  `NotifyAbsence_set` bit(1) NOT NULL DEFAULT b'1',
+  `NotifySyllabus_set` bit(1) NOT NULL DEFAULT b'0',
+  `NotifyJustif_set` bit(1) NOT NULL DEFAULT b'1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `parametre`
+--
+
+INSERT INTO `parametre` (`ID`, `UtilisateurID`, `AnneeAcademique_set`, `RenduAppel_set`, `FormatExport_set`, `NotifyAbsence_set`, `NotifySyllabus_set`, `NotifyJustif_set`) VALUES
+(1, 1, '2026-2027', 'trombi', 'pdf', b'1', b'0', b'1'),
+(22, 2, '2026-2027', 'liste', 'pdf', b'1', b'0', b'1');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `presence`
+--
+
+CREATE TABLE `presence` (
+  `ID` int(10) NOT NULL,
+  `UtilisateurID` int(10) NOT NULL,
+  `SeanceID` int(10) NOT NULL,
+  `Id_pre` int(10) NOT NULL,
+  `Statut_pre` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déclencheurs `presence`
+--
+CREATE TRIGGER `after_presence_insert` AFTER INSERT ON `presence` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (NEW.UtilisateurID, 4, CURDATE(), 'INSERT', CONCAT('Marquage initial de présence sur la séance ID ', NEW.SeanceID, ' - Statut : ', NEW.Statut_pre));
+
+CREATE TRIGGER `after_presence_update` AFTER UPDATE ON `presence` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (NEW.UtilisateurID, 5, CURDATE(), 'UPDATE', CONCAT('Modification de présence pour l''étudiant ID ', NEW.UtilisateurID, ' (Ancien statut: ', OLD.Statut_pre, ' -> Nouveau statut: ', NEW.Statut_pre, ')'));
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `salle`
+--
+
+CREATE TABLE `salle` (
+  `ID` int(10) NOT NULL,
+  `CampusID` int(10) NOT NULL,
+  `Id_salle` int(10) NOT NULL,
+  `Nom_salle` varchar(255) DEFAULT NULL,
+  `Capacite_salle` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `presence2`
+-- Structure de la table `seance`
 --
 
-CREATE TABLE `presence2` (
-  `ID2` int(10) NOT NULL,
-  `Utilisateur2ID2` int(10) NOT NULL,
-  `Seance2ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
-  `Statut` varchar(255) DEFAULT NULL
+CREATE TABLE `seance` (
+  `ID` int(10) NOT NULL,
+  `SalleID` int(10) NOT NULL,
+  `UEID` int(10) NOT NULL,
+  `Id_sea` int(10) NOT NULL,
+  `DateSeance_sea` date DEFAULT NULL,
+  `HeureDebut_sea` time DEFAULT NULL,
+  `HeureFin_sea` time DEFAULT NULL,
+  `Type_sea` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `salle2`
+-- Structure de la table `semestre`
 --
 
-CREATE TABLE `salle2` (
-  `ID2` int(10) NOT NULL,
-  `Campus2ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
-  `Nom` varchar(255) DEFAULT NULL,
-  `Capacite` int(10) NOT NULL
+CREATE TABLE `semestre` (
+  `ID` int(10) NOT NULL,
+  `AnneeAcademiqueID` int(10) NOT NULL,
+  `Id_sem` int(10) NOT NULL,
+  `Code_sem` varchar(255) DEFAULT NULL,
+  `DateDebut_sem` date DEFAULT NULL,
+  `DateFin_sem` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `seance2`
+-- Structure de la table `systracks`
 --
 
-CREATE TABLE `seance2` (
-  `ID2` int(10) NOT NULL,
-  `Salle2ID2` int(10) NOT NULL,
-  `UE2ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
-  `DateSeance` date DEFAULT NULL,
-  `HeureDebut` time DEFAULT NULL,
-  `HeureFin` time DEFAULT NULL,
-  `Type` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `semestre2`
---
-
-CREATE TABLE `semestre2` (
-  `ID2` int(10) NOT NULL,
-  `AnneeAcademique2ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
-  `Code` varchar(255) DEFAULT NULL,
-  `DateDebut` date DEFAULT NULL,
-  `DateFin` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `systracks2`
---
-
-CREATE TABLE `systracks2` (
+CREATE TABLE `systracks` (
   `ID` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `ue2`
+-- Structure de la table `ue`
 --
 
-CREATE TABLE `ue2` (
-  `ID2` int(10) NOT NULL,
-  `Utilisateur2ID2` int(10) NOT NULL,
-  `Filiere2ID2` int(10) NOT NULL,
-  `Id` int(10) NOT NULL,
-  `Code` varchar(255) DEFAULT NULL,
-  `Intitule` varchar(255) DEFAULT NULL,
-  `VolumeHorairePrevu` int(10) NOT NULL
+CREATE TABLE `ue` (
+  `ID` int(10) NOT NULL,
+  `UtilisateurID` int(10) NOT NULL,
+  `FiliereID` int(10) NOT NULL,
+  `Id_ue` int(10) NOT NULL,
+  `Code_ue` varchar(255) DEFAULT NULL,
+  `Intitule_ue` varchar(255) DEFAULT NULL,
+  `VolumeHorairePrevu_ue` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `utilisateur2`
+-- Structure de la table `utilisateur`
 --
 
-CREATE TABLE `utilisateur2` (
-  `ID2` int(10) NOT NULL,
-  `Filiere2ID2` int(10) DEFAULT NULL,
-  `Id` int(10) NOT NULL,
-  `Nom` varchar(255) DEFAULT NULL,
-  `Prenom` varchar(255) DEFAULT NULL,
-  `Email` varchar(255) DEFAULT NULL,
-  `MotDePasse` varchar(255) DEFAULT NULL,
-  `Role` varchar(255) DEFAULT NULL,
-  `EstActif` bit(1) NOT NULL,
-  `Matricule` varchar(255) DEFAULT NULL,
-  `Specialite` varchar(255) DEFAULT NULL,
+CREATE TABLE `utilisateur` (
+  `ID` int(10) NOT NULL,
+  `FiliereID` int(10) DEFAULT NULL,
+  `Id_user` int(10) NOT NULL,
+  `Nom_user` varchar(255) DEFAULT NULL,
+  `Prenom_user` varchar(255) DEFAULT NULL,
+  `Email_user` varchar(255) DEFAULT NULL,
+  `MotDePasse_user` varchar(255) DEFAULT NULL,
+  `Role_user` varchar(255) DEFAULT NULL,
+  `EstActif_user` bit(1) NOT NULL,
+  `Matricule_etu` varchar(255) DEFAULT NULL,
+  `Specialite_ens` varchar(255) DEFAULT NULL,
   `Discriminator` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `utilisateur2`
+-- Déchargement des données de la table `utilisateur`
 --
 
-INSERT INTO `utilisateur2` (`ID2`, `Filiere2ID2`, `Id`, `Nom`, `Prenom`, `Email`, `MotDePasse`, `Role`, `EstActif`, `Matricule`, `Specialite`, `Discriminator`) VALUES
-(1, NULL, 1, 'ADMIN', 'Scolarite', 'admin.tracks@etablissement.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'scolarite', b'1', 'ADM202601', NULL, 'Utilisateur');
+INSERT INTO `utilisateur` (`ID`, `FiliereID`, `Id_user`, `Nom_user`, `Prenom_user`, `Email_user`, `MotDePasse_user`, `Role_user`, `EstActif_user`, `Matricule_etu`, `Specialite_ens`, `Discriminator`) VALUES
+(1, NULL, 1, 'ADMIN', 'Scolarite', 'admin.tracks@etablissement.fr', '$2y$10$K6TaRN1OZAFyqj2.WaecUO7.8l9jr6KwnDXRukeygKsXTkJyzEeqW', 'scolarite', b'1', 'ADM202601', NULL, 'Utilisateur'),
+(2, NULL, 2, 'TCHOUTA', 'Alain Serge', 'jean.eboa@etablissement.fr', '$2y$10$K6TaRN1OZAFyqj2.WaecUO7.8l9jr6KwnDXRukeygKsXTkJyzEeqW', 'chef_departement', b'1', NULL, 'Modelisation/Programmation systeme', 'Utilisateur');
+
+--
+-- Déclencheurs `utilisateur`
+--
+CREATE TRIGGER `after_utilisateur_insert` AFTER INSERT ON `utilisateur` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (NEW.ID, 1, CURDATE(), 'INSERT', CONCAT('Inscription de l''utilisateur : ', NEW.Nom_user, ' ', NEW.Prenom_user, ' (Rôle : ', NEW.Role_user, ')'));
+
+CREATE TRIGGER `after_utilisateur_update` AFTER UPDATE ON `utilisateur` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (NEW.ID, 2, CURDATE(), 'UPDATE', CONCAT('Modification de l''utilisateur ID ', NEW.ID, ' (Changement d''email ou mise à jour de sécurité de mot de passe)'));
+
+CREATE TRIGGER `before_utilisateur_delete` BEFORE DELETE ON `utilisateur` FOR EACH ROW
+    INSERT INTO logsaudit (UtilisateurID, Id_log, Timestamp_log, Action_log, Description_log)
+    VALUES (OLD.ID, 3, CURDATE(), 'DELETE', CONCAT('Suppression de l''utilisateur : ', OLD.Nom_user, ' ', OLD.Prenom_user, ' (Ancien Rôle : ', OLD.Role_user, ')'));
 
 --
 -- Index pour les tables déchargées
 --
 
 --
--- Index pour la table `anneeacademique2`
+-- Index pour la table `anneeacademique`
 --
-ALTER TABLE `anneeacademique2`
-  ADD PRIMARY KEY (`ID2`);
-
---
--- Index pour la table `campus2`
---
-ALTER TABLE `campus2`
-  ADD PRIMARY KEY (`ID2`);
-
---
--- Index pour la table `chapitre2`
---
-ALTER TABLE `chapitre2`
-  ADD PRIMARY KEY (`ID2`),
-  ADD KEY `structure` (`UE2ID2`);
-
---
--- Index pour la table `convocation2`
---
-ALTER TABLE `convocation2`
-  ADD PRIMARY KEY (`ID2`),
-  ADD KEY `emet` (`Utilisateur2ID2`),
-  ADD KEY `recoit` (`Utilisateur2ID22`);
-
---
--- Index pour la table `filiere2`
---
-ALTER TABLE `filiere2`
-  ADD PRIMARY KEY (`ID2`),
-  ADD KEY `heberge` (`Campus2ID2`),
-  ADD KEY `planifie` (`Semestre2ID2`);
-
---
--- Index pour la table `justification2`
---
-ALTER TABLE `justification2`
-  ADD PRIMARY KEY (`ID2`),
-  ADD KEY `justifie` (`Presence2ID2`);
-
---
--- Index pour la table `logsaudit2`
---
-ALTER TABLE `logsaudit2`
-  ADD PRIMARY KEY (`ID2`),
-  ADD KEY `consulte` (`Utilisateur2ID2`);
-
---
--- Index pour la table `presence2`
---
-ALTER TABLE `presence2`
-  ADD PRIMARY KEY (`ID2`),
-  ADD KEY `controle` (`Seance2ID2`),
-  ADD KEY `pointe` (`Utilisateur2ID2`);
-
---
--- Index pour la table `salle2`
---
-ALTER TABLE `salle2`
-  ADD PRIMARY KEY (`ID2`),
-  ADD KEY `appartient` (`Campus2ID2`);
-
---
--- Index pour la table `seance2`
---
-ALTER TABLE `seance2`
-  ADD PRIMARY KEY (`ID2`),
-  ADD KEY `deroule` (`UE2ID2`),
-  ADD KEY `occupe` (`Salle2ID2`);
-
---
--- Index pour la table `semestre2`
---
-ALTER TABLE `semestre2`
-  ADD PRIMARY KEY (`ID2`),
-  ADD KEY `compose` (`AnneeAcademique2ID2`);
-
---
--- Index pour la table `systracks2`
---
-ALTER TABLE `systracks2`
+ALTER TABLE `anneeacademique`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Index pour la table `ue2`
+-- Index pour la table `campus`
 --
-ALTER TABLE `ue2`
-  ADD PRIMARY KEY (`ID2`),
-  ADD KEY `contient` (`Filiere2ID2`),
-  ADD KEY `enseigne` (`Utilisateur2ID2`);
+ALTER TABLE `campus`
+  ADD PRIMARY KEY (`ID`);
 
 --
--- Index pour la table `utilisateur2`
+-- Index pour la table `chapitre`
 --
-ALTER TABLE `utilisateur2`
-  ADD PRIMARY KEY (`ID2`),
-  ADD KEY `inscrit` (`Filiere2ID2`);
+ALTER TABLE `chapitre`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `structure2` (`UEID`);
+
+--
+-- Index pour la table `convocation`
+--
+ALTER TABLE `convocation`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `emet2` (`UtilisateurID2`),
+  ADD KEY `recoit2` (`UtilisateurID`);
+
+--
+-- Index pour la table `filiere`
+--
+ALTER TABLE `filiere`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `planifie2` (`SemestreID`),
+  ADD KEY `heberge2` (`CampusID`);
+
+--
+-- Index pour la table `justification`
+--
+ALTER TABLE `justification`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `justifie2` (`PresenceID`);
+
+--
+-- Index pour la table `logsaudit`
+--
+ALTER TABLE `logsaudit`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `consulte2` (`UtilisateurID`);
+
+--
+-- Index pour la table `parametre`
+--
+ALTER TABLE `parametre`
+  ADD PRIMARY KEY (`ID`),
+  ADD UNIQUE KEY `unique_user` (`UtilisateurID`);
+
+--
+-- Index pour la table `presence`
+--
+ALTER TABLE `presence`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `pointe2` (`UtilisateurID`),
+  ADD KEY `controle2` (`SeanceID`);
+
+--
+-- Index pour la table `salle`
+--
+ALTER TABLE `salle`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `appartient2` (`CampusID`);
+
+--
+-- Index pour la table `seance`
+--
+ALTER TABLE `seance`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `occupe2` (`SalleID`),
+  ADD KEY `deroule2` (`UEID`);
+
+--
+-- Index pour la table `semestre`
+--
+ALTER TABLE `semestre`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `compose2` (`AnneeAcademiqueID`);
+
+--
+-- Index pour la table `systracks`
+--
+ALTER TABLE `systracks`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Index pour la table `ue`
+--
+ALTER TABLE `ue`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `enseigne2` (`UtilisateurID`),
+  ADD KEY `contient2` (`FiliereID`);
+
+--
+-- Index pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `inscrit2` (`FiliereID`),
+  ADD KEY `idx_search_identity` (`Nom_user`,`Prenom_user`,`Matricule_etu`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
 --
 
 --
--- AUTO_INCREMENT pour la table `anneeacademique2`
+-- AUTO_INCREMENT pour la table `anneeacademique`
 --
-ALTER TABLE `anneeacademique2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `campus2`
---
-ALTER TABLE `campus2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `chapitre2`
---
-ALTER TABLE `chapitre2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `convocation2`
---
-ALTER TABLE `convocation2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `filiere2`
---
-ALTER TABLE `filiere2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `justification2`
---
-ALTER TABLE `justification2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `logsaudit2`
---
-ALTER TABLE `logsaudit2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `presence2`
---
-ALTER TABLE `presence2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `salle2`
---
-ALTER TABLE `salle2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `seance2`
---
-ALTER TABLE `seance2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `semestre2`
---
-ALTER TABLE `semestre2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `systracks2`
---
-ALTER TABLE `systracks2`
+ALTER TABLE `anneeacademique`
   MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pour la table `ue2`
+-- AUTO_INCREMENT pour la table `campus`
 --
-ALTER TABLE `ue2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `campus`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pour la table `utilisateur2`
+-- AUTO_INCREMENT pour la table `chapitre`
 --
-ALTER TABLE `utilisateur2`
-  MODIFY `ID2` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `chapitre`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `convocation`
+--
+ALTER TABLE `convocation`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `filiere`
+--
+ALTER TABLE `filiere`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `justification`
+--
+ALTER TABLE `justification`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `logsaudit`
+--
+ALTER TABLE `logsaudit`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT pour la table `parametre`
+--
+ALTER TABLE `parametre`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT pour la table `presence`
+--
+ALTER TABLE `presence`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `salle`
+--
+ALTER TABLE `salle`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `seance`
+--
+ALTER TABLE `seance`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `semestre`
+--
+ALTER TABLE `semestre`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `systracks`
+--
+ALTER TABLE `systracks`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `ue`
+--
+ALTER TABLE `ue`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+  MODIFY `ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Contraintes pour les tables déchargées
 --
 
 --
--- Contraintes pour la table `chapitre2`
+-- Contraintes pour la table `chapitre`
 --
-ALTER TABLE `chapitre2`
-  ADD CONSTRAINT `structure` FOREIGN KEY (`UE2ID2`) REFERENCES `ue2` (`ID2`);
+ALTER TABLE `chapitre`
+  ADD CONSTRAINT `structure2` FOREIGN KEY (`UEID`) REFERENCES `ue` (`ID`);
 
 --
--- Contraintes pour la table `convocation2`
+-- Contraintes pour la table `convocation`
 --
-ALTER TABLE `convocation2`
-  ADD CONSTRAINT `emet` FOREIGN KEY (`Utilisateur2ID2`) REFERENCES `utilisateur2` (`ID2`),
-  ADD CONSTRAINT `recoit` FOREIGN KEY (`Utilisateur2ID22`) REFERENCES `utilisateur2` (`ID2`);
+ALTER TABLE `convocation`
+  ADD CONSTRAINT `emet2` FOREIGN KEY (`UtilisateurID2`) REFERENCES `utilisateur` (`ID`),
+  ADD CONSTRAINT `recoit2` FOREIGN KEY (`UtilisateurID`) REFERENCES `utilisateur` (`ID`);
 
 --
--- Contraintes pour la table `filiere2`
+-- Contraintes pour la table `filiere`
 --
-ALTER TABLE `filiere2`
-  ADD CONSTRAINT `heberge` FOREIGN KEY (`Campus2ID2`) REFERENCES `campus2` (`ID2`),
-  ADD CONSTRAINT `planifie` FOREIGN KEY (`Semestre2ID2`) REFERENCES `semestre2` (`ID2`);
+ALTER TABLE `filiere`
+  ADD CONSTRAINT `heberge2` FOREIGN KEY (`CampusID`) REFERENCES `campus` (`ID`),
+  ADD CONSTRAINT `planifie2` FOREIGN KEY (`SemestreID`) REFERENCES `semestre` (`ID`);
 
 --
--- Contraintes pour la table `justification2`
+-- Contraintes pour la table `justification`
 --
-ALTER TABLE `justification2`
-  ADD CONSTRAINT `justifie` FOREIGN KEY (`Presence2ID2`) REFERENCES `presence2` (`ID2`);
+ALTER TABLE `justification`
+  ADD CONSTRAINT `justifie2` FOREIGN KEY (`PresenceID`) REFERENCES `presence` (`ID`);
 
 --
--- Contraintes pour la table `logsaudit2`
+-- Contraintes pour la table `logsaudit`
 --
-ALTER TABLE `logsaudit2`
-  ADD CONSTRAINT `consulte` FOREIGN KEY (`Utilisateur2ID2`) REFERENCES `utilisateur2` (`ID2`);
+ALTER TABLE `logsaudit`
+  ADD CONSTRAINT `consulte2` FOREIGN KEY (`UtilisateurID`) REFERENCES `utilisateur` (`ID`);
 
 --
--- Contraintes pour la table `presence2`
+-- Contraintes pour la table `parametre`
 --
-ALTER TABLE `presence2`
-  ADD CONSTRAINT `controle` FOREIGN KEY (`Seance2ID2`) REFERENCES `seance2` (`ID2`),
-  ADD CONSTRAINT `pointe` FOREIGN KEY (`Utilisateur2ID2`) REFERENCES `utilisateur2` (`ID2`);
+ALTER TABLE `parametre`
+  ADD CONSTRAINT `fk_setting_utilisateur` FOREIGN KEY (`UtilisateurID`) REFERENCES `utilisateur` (`ID`) ON DELETE CASCADE;
 
 --
--- Contraintes pour la table `salle2`
+-- Contraintes pour la table `presence`
 --
-ALTER TABLE `salle2`
-  ADD CONSTRAINT `appartient` FOREIGN KEY (`Campus2ID2`) REFERENCES `campus2` (`ID2`);
+ALTER TABLE `presence`
+  ADD CONSTRAINT `controle2` FOREIGN KEY (`SeanceID`) REFERENCES `seance` (`ID`),
+  ADD CONSTRAINT `pointe2` FOREIGN KEY (`UtilisateurID`) REFERENCES `utilisateur` (`ID`);
 
 --
--- Contraintes pour la table `seance2`
+-- Contraintes pour la table `salle`
 --
-ALTER TABLE `seance2`
-  ADD CONSTRAINT `deroule` FOREIGN KEY (`UE2ID2`) REFERENCES `ue2` (`ID2`),
-  ADD CONSTRAINT `occupe` FOREIGN KEY (`Salle2ID2`) REFERENCES `salle2` (`ID2`);
+ALTER TABLE `salle`
+  ADD CONSTRAINT `appartient2` FOREIGN KEY (`CampusID`) REFERENCES `campus` (`ID`);
 
 --
--- Contraintes pour la table `semestre2`
+-- Contraintes pour la table `seance`
 --
-ALTER TABLE `semestre2`
-  ADD CONSTRAINT `compose` FOREIGN KEY (`AnneeAcademique2ID2`) REFERENCES `anneeacademique2` (`ID2`);
+ALTER TABLE `seance`
+  ADD CONSTRAINT `deroule2` FOREIGN KEY (`UEID`) REFERENCES `ue` (`ID`),
+  ADD CONSTRAINT `occupe2` FOREIGN KEY (`SalleID`) REFERENCES `salle` (`ID`);
 
 --
--- Contraintes pour la table `ue2`
+-- Contraintes pour la table `semestre`
 --
-ALTER TABLE `ue2`
-  ADD CONSTRAINT `contient` FOREIGN KEY (`Filiere2ID2`) REFERENCES `filiere2` (`ID2`),
-  ADD CONSTRAINT `enseigne` FOREIGN KEY (`Utilisateur2ID2`) REFERENCES `utilisateur2` (`ID2`);
+ALTER TABLE `semestre`
+  ADD CONSTRAINT `compose2` FOREIGN KEY (`AnneeAcademiqueID`) REFERENCES `anneeacademique` (`ID`);
 
 --
--- Contraintes pour la table `utilisateur2`
+-- Contraintes pour la table `ue`
 --
-ALTER TABLE `utilisateur2`
-  ADD CONSTRAINT `inscrit` FOREIGN KEY (`Filiere2ID2`) REFERENCES `filiere2` (`ID2`);
+ALTER TABLE `ue`
+  ADD CONSTRAINT `contient2` FOREIGN KEY (`FiliereID`) REFERENCES `filiere` (`ID`),
+  ADD CONSTRAINT `enseigne2` FOREIGN KEY (`UtilisateurID`) REFERENCES `utilisateur` (`ID`);
+
+--
+-- Contraintes pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+  ADD CONSTRAINT `inscrit2` FOREIGN KEY (`FiliereID`) REFERENCES `filiere` (`ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

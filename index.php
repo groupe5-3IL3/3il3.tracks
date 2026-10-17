@@ -20,7 +20,7 @@ unset($_SESSION['login_error']);
     <meta name="theme-color" content="#10183b" />
     <meta name="description" content="Connectez-vous à TrackS, votre espace de suivi pédagogique." />
     <link rel="icon" href="assets/images/favicon.ico" />
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css"> 
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" /> 
     <link rel="stylesheet" href="assets/css/connexion.css" /> 
     <title>Connexion | TrackS</title>
 </head>

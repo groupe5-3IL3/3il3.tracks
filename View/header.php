@@ -71,7 +71,7 @@ $user_role = $_SESSION['user_role'] ?? '';
                         <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2">
                             <li><a class="dropdown-item py-2" href="etudiant.php"><i class="bi bi-mortarboard me-2 text-muted"></i>Inscriptions Étudiants</a></li>
                             <li><hr class="dropdown-divider my-1" /></li>
-                            <li><a class="dropdown-item py-2" href="enseignants_gestion.php"><i class="bi bi-person-badge me-2 text-muted"></i>Enregistrer &amp; Gérer Enseignants</a></li>
+                            <li><a class="dropdown-item py-2" href="enseignant.php"><i class="bi bi-person-badge me-2 text-muted"></i>Enregistrer &amp; Gérer Enseignants</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">

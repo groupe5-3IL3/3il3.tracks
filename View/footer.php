@@ -62,7 +62,7 @@ $user_role = $_SESSION['user_role'] ?? 'etudiant';
                         <i class="bi bi-envelope text-primary"></i> support.tracks@3il3.fr
                     </li>
                     <li class="mb-2 d-flex align-items-center gap-2">
-                        <i class="bi bi-telephone text-primary"></i> +33 (0)5 55 55 55 55
+                        <i class="bi bi-telephone text-primary"></i> +237 688 724 499
                     </li>
                     <li class="d-flex align-items-center gap-2">
                         <i class="bi bi-question-circle text-primary"></i> Centre d'Aide & FAQ

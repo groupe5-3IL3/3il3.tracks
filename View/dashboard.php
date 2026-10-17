@@ -32,7 +32,6 @@ $user_email = $_SESSION['user_email'];
 </head>
 <body class="container d-flex flex-column min-vh-100 bg-light">
     
-    <!-- Intégration du Header modulaire -->
     <?php include 'header.php'; ?>
 
     <main class="flex-grow-1">
@@ -60,14 +59,14 @@ $user_email = $_SESSION['user_email'];
                     <div class="alert alert-warning py-3 px-4 border-0 rounded-3 shadow-sm animate-fade-up m-0">
                         <h4 class="alert-heading fw-bold fs-5 mb-2"><i class="bi bi-shield-lock-fill me-2"></i>Espace Direction & Supervision</h4>
                         <p class="text-dark mb-0">
-                            Session superviseur ouverte. Vous disposez des droits d'accès pour **consulter le journal d'audit** complet de votre département et **émettre des convocations officielles** à l'attention des étudiants en situation de décrochage.
+                            Session superviseur ouverte. Vous disposez des droits d'accès pour <b>consulter le journal d'audit</b> complet de votre département et <b>émettre des convocations officielles</b> à l'attention des étudiants en situation de décrochage.
                         </p>
                     </div>
                 <?php elseif ($user_role === 'enseignant'): ?>
                     <div class="alert alert-success py-3 px-4 border-0 rounded-3 shadow-sm animate-fade-up m-0">
                         <h4 class="alert-heading fw-bold fs-5 mb-2"><i class="bi bi-person-workspace me-2"></i>Espace Enseignant</h4>
                         <p class="text-dark mb-0">
-                            Session pédagogique active. Accédez immédiatement à vos Unités d'Enseignement (UE) pour **remplir la feuille d'appel en ligne** de votre séance actuelle ou valider la progression des chapitres de votre syllabus.
+                            Session pédagogique active. Accédez immédiatement à vos Unités d'Enseignement (UE) pour <b>remplir la feuille d'appel en ligne</b> de votre séance actuelle ou valider la progression des chapitres de votre syllabus.
                         </p>
                     </div>
                 <?php elseif ($user_role === 'etudiant'): ?>
